@@ -1,4 +1,10 @@
-reated by https://www.gitignore.io/api/macos,linux,python,windows
+.idea
+
+### SHPFile ###
+*.dbf
+*.shp
+
+Created by https://www.gitignore.io/api/macos,linux,python,windows
 
 ### Linux ###
 *~
