@@ -1,43 +1,42 @@
+import settings
+import utils
+import time
+
+## Craigslist Scraper
+
+# Don't hammer their servers, next time grab the data and then use that instead for Testing
 from craigslist import CraigslistHousing
 
-### Shapefile Get Neighbourhood Metadata
-import shapefile
+def scrape_area(areas):
 
-shpf = shapefile.Reader("TorNeighbour.shp")
-records = shpf.iterShapeRecords()
-neighbourhoods = {}
-for record in records:
-    name = record.record
-    bbox = record.shape.bbox
-    neighbourhoods[name[1]] = [coord for coord in bbox]
-### Builds a neighbourhoods dictionary with Neighbourhood Name and GPS Bounding Box
+	cl = CraigslistHousing(site=settings.CRAIGSLIST_SITE, area=areas, category=settings.CRAIGSLIST_HOUSING_SECTION, filters={'max_price': settings.MAX_PRICE, 'min_price': settings.MIN_PRICE})
 
-### Craigslist Scraper
+	results = cl.get_results(sort_by='newest', geotagged=True, limit=5)
 
-cl = CraigslistHousing(site='toronto', area='tor', category='apa',
-						 filters={'max_price': 2000, 'min_price': 1000})
+	neighbourhoods = utils.getNeighbourhoods()
 
-results = cl.get_results(sort_by='newest', geotagged=True, limit=5)
-
-def in_box(coords, box):
-	if box[1] < coords[0] < box[3] and box[0] < coords[1] < box[2]:
-		return True
-	return False
-
-### Compare Scraped data to see if in Neighbourhoods Metadata and keep the ones that are
-myResults = []
-for result in results:
-	try:
-		geotag = result["geotag"]
-		for a, coords in neighbourhoods.items():
-			if in_box(geotag, coords):
-				result['area'] = a
-				result['area_found'] = True
-			else:
-				result['area'] = "none"
-				result['area_found'] = False
+	## Compare Scraped data to see if in Neighbourhoods Metadata and keep the ones that are
+	myResults = []
+	for result in results:
+		try:
+			geotag = result["geotag"]
+			result['area'] = "none"
+			result['area_found'] = False
+			for a, coords in neighbourhoods.items():
+				if utils.in_box(geotag, coords):
+					result['area'] = a
+					result['area_found'] = True
+					break
 			myResults.append(result)
-	except:
-		print "No coordinates"
+		except:
+			pass
 
-print myResults
+	return myResults
+
+def doScrape():
+	all_results = []
+	for area in settings.AREAS:
+		all_results += scrape_area(area)
+	print("{}: Got {} results".format(time.ctime(), len(all_results)))
+	return all_results
+
