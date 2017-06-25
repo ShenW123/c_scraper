@@ -1,3 +1,9 @@
+### Generated Files ###
+neighbourhood.json
+
+### Database ###
+*.db
+
 ### Authentication Files ###
 auth_slack.json
 auth_gmaps.json

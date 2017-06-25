@@ -35,7 +35,7 @@ CRAIGSLIST_HOUSING_SECTION = 'apa'
 # Too slow may miss listings.
 # SLEEP_INTERVAL = 20 * 60 # 20 minutes
 
-SLEEP_INTERVAL = 20 # 20 minutes
+SLEEP_INTERVAL = 20 # 20 seconds
 
 # Which slack channel to post the listings into.
 SLACK_CHANNEL = "#housing"
