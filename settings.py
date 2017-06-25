@@ -58,6 +58,21 @@ NEIGHBOURHOOD_MAP = "TorNeighbour.shp"
 # Parsed Neighbourhoods file
 NEIGHBOURHOOD_File = "neighbourhood.json"
 
+
+# Get Location Information to Compare against
+with open('locations.json') as data_file:    
+    locations = json.load(data_file)
+
+WORKPLACE = {
+    "lat": locations['work']['lat'],
+    "lng": locations['work']['lng']
+}
+
+DOWNTOWN = {
+    "lat": locations['dt']['lat'],
+    "lng": locations['dt']['lng']
+}
+
 # Any private settings are imported here.
 try:
     from private import *

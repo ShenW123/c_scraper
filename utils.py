@@ -34,7 +34,7 @@ def makeNeighbourhoods():
 def notifySlack(myResults):
 	sc = SlackClient(settings.SLACK_TOKEN)
 	for posting in myResults:
-		desc = "{0} | {1} | {2} | <{3}>".format(posting["area"], posting["price"], posting["name"], posting["url"])
+		desc = "{0} | {1} | {2} | <{3}> | Transit <Work {4}> <DT {5}>".format(posting["area"], posting["price"], posting["name"], posting["url"], posting["locations"]["work"], posting["locations"]["dt"])
 		sc.api_call(
 			"chat.postMessage", channel=settings.SLACK_CHANNEL, text=desc
 		)
